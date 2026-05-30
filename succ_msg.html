@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block body_block %}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #f4f7fb, #eef2f7);
+    }
+
+    .result-card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .result-header {
+        background: #1f4f46;
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .status-approved {
+        color: #198754;
+        font-weight: 700;
+    }
+
+    .status-rejected {
+        color: #dc3545;
+        font-weight: 700;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+
+            <div class="card shadow result-card">
+
+                <!-- Header -->
+                <div class="result-header">
+                    <h4 class="mb-1">Loan Evaluation Details</h4>
+                    <small>Summary of applicant information and decision</small>
+                </div>
+
+                <!-- Body -->
+                <div class="card-body bg-white p-4">
+
+                    <!-- Details -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><span class="label">Applicant Income:</span> {{ data_income }}</p>
+                            <p><span class="label">Coapplicant Income:</span> {{ data_co_income }}</p>
+                            <p><span class="label">Loan Amount:</span> {{ data_loan_amt }}</p>
+                            <p><span class="label">Loan Term:</span> {{ data_loan_term }}</p>
+                            <p><span class="label">Credit History:</span> {{ data_credit_history }}</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <p><span class="label">Gender:</span> {{ data_gender }}</p>
+                            <p><span class="label">Education:</span> {{ data_education }}</p>
+                            <p><span class="label">Married:</span> {{ data_married }}</p>
+                            <p><span class="label">Dependents:</span> {{ data_dependents }}</p>
+                            <p><span class="label">Property Area:</span> {{ data_area }}</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Loan Status -->
+                    <h5>
+                        Loan Status:
+                        {% if prediction == 1 or prediction == 'Y' %}
+                            <span class="status-approved">✅ Approved</span>
+                        {% else %}
+                            <span class="status-rejected">❌ Rejected</span>
+                        {% endif %}
+                    </h5>
+
+                    <!-- Probability -->
+                    <div class="mt-3">
+                        <p class="mb-1">
+                            <strong>Approval Probability:</strong>
+                            {% if probability is not None %}
+                                {{ probability|floatformat:2 }} %
+                            {% else %}
+                                Not Available
+                            {% endif %}
+                        </p>
+
+                        {% if probability is not None %}
+                        <div class="progress" style="height: 22px;">
+                            <div class="progress-bar
+                                {% if probability > 50 %}
+                                    bg-success
+                                {% else %}
+                                    bg-danger
+                                {% endif %}"
+                                role="progressbar"
+                                style="width: {{ probability }}%;">
+                                {{ probability|floatformat:1 }}%
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
